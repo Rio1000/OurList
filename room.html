@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="roomStyle.css">
+    <title>Room</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>OurList</h1>
+
+        <div id="roomInfo">
+            <!-- Room information will be displayed here -->
+        </div>
+        <div id="roomCount">
+            <!-- Room count will be displayed here -->
+        </div>
+    </div>
+
+
+    <script>
+        // Function to parse URL parameters
+        function getUrlParams() {
+            const params = {};
+            const urlParams = new URLSearchParams(window.location.search);
+            for (const [key, value] of urlParams) {
+                params[key] = value;
+            }
+            return params;
+        }
+
+        // Function to display room information
+        function displayRoomInfo() {
+            const params = getUrlParams();
+            const roomName = decodeURIComponent(params.roomName || '');
+            const joinCode = decodeURIComponent(params.joinCode || '');
+
+            const roomInfoContainer = document.getElementById('roomInfo');
+            roomInfoContainer.innerHTML = `<p><strong>Room Name:</strong> ${roomName}</p>
+                                            <p><strong>Join Code:</strong> ${joinCode} <button class="copy-btn" onclick="copyJoinCode()">Copy</button></p>`;
+        }
+
+        // Function to copy join code to clipboard
+        function copyJoinCode() {
+            const params = getUrlParams();
+            const joinCode = decodeURIComponent(params.joinCode || '');
+
+            // Copy join code to clipboard
+            navigator.clipboard.writeText(joinCode)
+                .then(() => alert("Join code copied to clipboard."))
+                .catch((error) => console.error("Unable to copy join code: ", error));
+        }
+
+        // Function to display room count
+        function displayRoomCount() {
+            const params = getUrlParams();
+            const roomName = decodeURIComponent(params.roomName || '');
+            const roomCount = localStorage.getItem(`${roomName}_count`) || 0;
+
+            const roomCountContainer = document.getElementById('roomCount');
+            roomCountContainer.innerHTML = `<p><strong>People in Room:</strong> ${roomCount}</p>`;
+        }
+
+        // Call displayRoomInfo and displayRoomCount functions when the page loads
+        window.onload = function () {
+            displayRoomInfo();
+            displayRoomCount();
+        };
+    </script>
+</body>
+
+</html>
